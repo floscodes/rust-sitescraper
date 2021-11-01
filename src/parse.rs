@@ -1,4 +1,4 @@
-pub (in crate) mod structs;
+pub mod structs;
 pub (in crate) mod fetch;
 mod text;
 mod innerhtml;

@@ -75,6 +75,7 @@ pub fn parse_html(html: &str) -> Result<parse::structs::Dom, Error> {
 /// let filtered_dom_2 = sitescraper::filter!(filtered_dom, "div");
 /// ```
 /// [`Dom`]: struct.Dom
+#[macro_export]
 macro_rules! filter {
         () => {};
 
