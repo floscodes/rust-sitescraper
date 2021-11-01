@@ -1,0 +1,17 @@
+[package]
+name = "sitescraper"
+version = "0.1.0"
+edition = "2018"
+author = "flopetautschnig (floscodes)"
+description = "Scraping Websites in Rust!"
+keywords = ["webscraping", "scraping-tool", "html-parser", "substring", "webscrape"]
+categories = ["web-programming::http-client", "parsing", "parser-implementations", "web-programming"]
+license = "BSD-3-Clause"
+repository = "https://github.com/floscodes/rust-sitescraper"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = "0.11.4"
+slicestring = "0.1.0"
