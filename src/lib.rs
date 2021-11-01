@@ -15,7 +15,7 @@ use std::io::{Error, ErrorKind};
 /// 
 /// let dom = sitescraper::parse_html(html);
 /// ```
-/// [`Dom`]: struct.Dom
+/// [`Dom`]: https://docs.rs/sitescraper/0.1.1/sitescraper/parse/structs/struct.Dom.html#
 pub fn parse_html(html: &str) -> Result<parse::structs::Dom, Error> {
 
     if !html.contains("<") || !html.contains(">") {
@@ -74,7 +74,7 @@ pub fn parse_html(html: &str) -> Result<parse::structs::Dom, Error> {
 /// 
 /// let filtered_dom_2 = sitescraper::filter!(filtered_dom, "div");
 /// ```
-/// [`Dom`]: struct.Dom
+/// [`Dom`]: https://docs.rs/sitescraper/0.1.1/sitescraper/parse/structs/struct.Dom.html#
 #[macro_export]
 macro_rules! filter {
         () => {};
