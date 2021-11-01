@@ -399,7 +399,7 @@ impl structs::Dom {
     }
 
     #[allow(dead_code)]
-    pub (in crate) fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> structs::Dom {
+    pub fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> structs::Dom {
 
         #[allow(unused_assignments)]
         let mut new = structs::Dom::new();
