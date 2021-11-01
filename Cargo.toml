@@ -1,10 +1,10 @@
 [package]
 name = "sitescraper"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2018"
 author = "flopetautschnig (floscodes)"
 description = "Scraping Websites in Rust!"
-keywords = ["webscraping", "scraping-tool", "html-parser", "substring", "webscrape"]
+keywords = ["webscraping", "scraping-tool", "html-parser", "webscrape", "parsing"]
 categories = ["web-programming::http-client", "parsing", "parser-implementations", "web-programming"]
 license = "BSD-3-Clause"
 repository = "https://github.com/floscodes/rust-sitescraper"
