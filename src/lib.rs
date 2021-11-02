@@ -15,8 +15,8 @@ use std::io::{Error, ErrorKind};
 /// 
 /// let dom = sitescraper::parse_html(html);
 /// ```
-/// [`Dom`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Dom.html#
-pub fn parse_html(html: &str) -> Result<parse::structs::Dom, Error> {
+/// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
+pub fn parse_html(html: &str) -> Result<Dom, Error> {
 
     if !html.contains("<") || !html.contains(">") {
         return Err(Error::new(ErrorKind::InvalidInput, "An error has occurred when trying to parse the html-string! (Invalid Input)"));
@@ -74,7 +74,7 @@ pub fn parse_html(html: &str) -> Result<parse::structs::Dom, Error> {
 /// 
 /// let filtered_dom_2 = sitescraper::filter!(filtered_dom, "div");
 /// ```
-/// [`Dom`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Dom.html#
+/// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
 #[macro_export]
 macro_rules! filter {
         () => {};
@@ -85,6 +85,23 @@ macro_rules! filter {
         ($dom: expr, $tag: expr, $attr_name: expr) => {$dom.f($tag, $attr_name, "")};
         ($dom: expr, $tag: expr, $attr_name: expr, $attr_value: expr) => {$dom.f($tag, $attr_name, $attr_value)};
     }
+
+
+/// A parsed html-String
+#[derive(Clone)]
+pub struct Dom {
+    pub tag: Vec<Tag>,
+    is_parsed: bool,
+}
+
+/// A public field of [`Dom`]
+/// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
+#[derive(Clone)]
+pub struct Tag {
+    tagname: String,
+    tagcontent: String,
+    innerhtml: String,
+}
 
 
 

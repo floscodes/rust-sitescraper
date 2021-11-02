@@ -4,7 +4,7 @@ mod text;
 mod innerhtml;
 mod tagnames;
 
-impl structs::Tag {
+impl crate::Tag {
 
     /// Returns InnerHTML inside a [`Tag`] as a [`String`]
     /// 
@@ -21,7 +21,7 @@ impl structs::Tag {
     /// println!("{}", filtered_dom.tag[0].get_inner_html());
     /// //Output: <div>Hello World!</div>
     /// ```
-    /// [`Tag`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Tag.html#
+    /// [`Tag`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Tag.html#
     pub fn get_inner_html(&self) -> String {
         self.innerhtml.clone()
     }
@@ -41,7 +41,7 @@ impl structs::Tag {
     /// println!("{}", filtered_dom.tag[0].get_tagname());
     /// //Output: div
     /// ```
-    /// [`Tag`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Tag.html#
+    /// [`Tag`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Tag.html#
     pub fn get_tagname(&self) -> String {
         self.tagname.clone()
     }
@@ -61,7 +61,7 @@ impl structs::Tag {
     /// println!("{}", filtered_dom.tag[0].get_text());
     /// //Output: Hello World!
     /// ```
-    /// [`Tag`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Tag.html#
+    /// [`Tag`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Tag.html#
     pub fn get_text(&self) -> String {
         text::get(&self.tagname, self.innerhtml.clone())
     }
@@ -82,7 +82,7 @@ impl structs::Tag {
     /// println!("{}", filtered_dom.tag[0].to_string());
     /// //Output: <div>Hello World!</div>
     /// ```
-    /// [`Tag`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Tag.html#
+    /// [`Tag`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Tag.html#
     pub fn to_string(&self) -> String {
         format!("{}{}</{}>", self.tagcontent, self.innerhtml, self.tagname)
     }
@@ -124,16 +124,16 @@ impl structs::Tag {
 }
 
 
-impl structs::Dom {
+impl crate::Dom {
     #[allow(dead_code)]
 
-    fn tag(&self, tagname: &str) -> structs::Dom {
+    fn tag(&self, tagname: &str) -> crate::Dom {
 
         if tagname.len() < 1 {
             return self.clone();
         }
 
-        let mut tags: Vec<structs::Tag> = vec![];
+        let mut tags: Vec<crate::Tag> = vec![];
 
         for n in &self.tag {
             if n.tagname == tagname {
@@ -141,33 +141,33 @@ impl structs::Dom {
             }
         }
 
-        structs::Dom{tag: tags, is_parsed: false}
+        crate::Dom{tag: tags, is_parsed: false}
 
     }
     #[allow(dead_code)]
-    fn attr(&self, attr: &str) -> structs::Dom {
+    fn attr(&self, attr: &str) -> crate::Dom {
 
         if attr.len() < 1 {
             return self.clone();
         }
 
-        let mut tags: Vec<structs::Tag> = vec![];
+        let mut tags: Vec<crate::Tag> = vec![];
 
         for n in &self.tag {
             if n.tagcontent.contains(&format!(r#"{}=""#, attr)) || n.tagcontent.contains(&format!("{}=", attr)) {
                 tags.push(n.clone());
             }
         }
-        structs::Dom{tag: tags, is_parsed: false}
+        crate::Dom{tag: tags, is_parsed: false}
     }
     #[allow(dead_code)]
-    fn attr_value(&self, attrvalue: &str) -> structs::Dom {
+    fn attr_value(&self, attrvalue: &str) -> crate::Dom {
 
         if attrvalue.len() < 1 {
             return self.clone();
         }
 
-        let mut tags: Vec<structs::Tag> = vec![];
+        let mut tags: Vec<crate::Tag> = vec![];
 
         for n in &self.tag {
             if n.tagcontent.contains(&format!(r#"="{}""#, attrvalue)) || n.tagcontent.contains(&format!(r#"={} "#, attrvalue)) || n.tagcontent.contains(&format!(r#"={}>"#, attrvalue)) {
@@ -175,7 +175,7 @@ impl structs::Dom {
             }
         }
 
-        structs::Dom{tag: tags, is_parsed: false}
+        crate::Dom{tag: tags, is_parsed: false}
     }
 
 
@@ -194,7 +194,7 @@ impl structs::Dom {
     /// println!("{}", filtered_dom.to_string());
     /// //Output: <div>Hello World!</div>
     /// ```
-    /// [`Dom`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Dom.html#
+    /// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
     pub fn to_string(&self) -> String {
 
         if self.is_parsed {
@@ -253,7 +253,7 @@ impl structs::Dom {
     /// println!("{}", filtered_dom.get_inner_html());
     /// //Output: <div>Hello World!</div>
     /// ```
-    /// [`Dom`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Dom.html#
+    /// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
     pub fn get_inner_html(&self) -> String {
 
         if self.is_parsed {
@@ -312,7 +312,7 @@ impl structs::Dom {
     /// println!("{}", filtered_dom.get_text());
     /// //Output: Hello World!
     /// ```
-    /// [`Dom`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Dom.html#
+    /// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
     pub fn get_text(&self) -> String {
 
         if self.is_parsed {
@@ -371,7 +371,7 @@ impl structs::Dom {
     /// println!("{}", filtered_dom.get_attr_value("id"));
     /// //Output: hello
     /// ```
-    /// [`Dom`]: https://docs.rs/sitescraper/0.1.5/sitescraper/parse/structs/struct.Dom.html#
+    /// [`Dom`]: https://docs.rs/sitescraper/0.1.51/sitescraper/struct.Dom.html#
     pub fn get_attr_value(&self, attrname: &str) -> String {
 
         let mut s: Vec<String> = vec![];
@@ -399,10 +399,10 @@ impl structs::Dom {
     }
 
     #[allow(dead_code)]
-    pub fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> structs::Dom {
+    pub fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> crate::Dom {
 
         #[allow(unused_assignments)]
-        let mut new = structs::Dom::new();
+        let mut new = crate::Dom::new();
 
         if tag_name == "" && attr_name == "" && attr_value == "" {
              return self.clone();

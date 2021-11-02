@@ -1,10 +1,9 @@
-pub (in crate::parse) use crate::parse::structs;
 use crate::parse::{tagnames, innerhtml};
 use slicestring::Slice;
 
-pub fn fetch(html: String) -> structs::Dom  {
+pub fn fetch(html: String) -> crate::Dom  {
 
-    let mut dm = structs::Dom::new();
+    let mut dm = crate::Dom::new();
     let mut html_string = html.clone();
     
     loop {
@@ -18,7 +17,7 @@ pub fn fetch(html: String) -> structs::Dom  {
         html_string=html_string[html_string.find(&tagcontent).unwrap()+tagcontent.len()..].to_string();
 
         if check_tagname(&tagname) {
-            dm.tag.push(structs::Tag{tagname: tagname.clone(), tagcontent: tagcontent, innerhtml: innerhtml::get(&tagname, html_string.to_string()).replace(innerhtml::BREAK_SUBST, "<br>")});
+            dm.tag.push(crate::Tag{tagname: tagname.clone(), tagcontent: tagcontent, innerhtml: innerhtml::get(&tagname, html_string.to_string()).replace(innerhtml::BREAK_SUBST, "<br>")});
         }
     }
     
@@ -30,8 +29,8 @@ pub fn fetch(html: String) -> structs::Dom  {
 
 }
 
-fn clear_closing_tags(d: structs::Dom) -> structs::Dom {
-    let mut new = structs::Dom::new();
+fn clear_closing_tags(d: crate::Dom) -> crate::Dom {
+    let mut new = crate::Dom::new();
     for i in 0..d.tag.len() {
         if !d.tag[i].tagcontent.contains("</") {
             new.tag.push(d.tag[i].clone());
