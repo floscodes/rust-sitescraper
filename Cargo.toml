@@ -1,6 +1,6 @@
 [package]
 name = "sitescraper"
-version = "0.1.51"
+version = "0.1.52"
 edition = "2018"
 author = "flopetautschnig (floscodes)"
 description = "Scraping Websites in Rust!"

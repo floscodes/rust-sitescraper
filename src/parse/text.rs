@@ -1,7 +1,7 @@
 use crate::parse::{fetch, innerhtml};
 use slicestring::Slice;
 
-pub (super) fn get(tagname: &str, mut innerhtml: String) -> String {
+pub (crate) fn get(tagname: &str, mut innerhtml: String) -> String {
 
     if !innerhtml.contains(">") {
         return innerhtml;

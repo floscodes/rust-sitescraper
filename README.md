@@ -8,7 +8,7 @@
 ```
 let html = "<html><body><div>Hello World!</div></body></html>";
      
-let dom = sitescraper::parse_html(html);
+let dom = sitescraper::parse_html(html).unwrap();
      
 let filtered_dom = sitescraper::filter!(dom, "body");
      
@@ -20,7 +20,7 @@ println!("{}", filtered_dom.get_inner_html());
 ```
 let html = "<html><body><div>Hello World!</div></body></html>";
 
-let dom = sitescraper::parse_html(html);
+let dom = sitescraper::parse_html(html).unwrap();
 
 let filtered_dom = sitescraper::filter!(dom, "body");
 
@@ -35,7 +35,7 @@ use sitescraper;
 
 let html = "<html><body><div>Hello World!</div></body></html>";
 
-let dom = sitescraper::parse_html(html);
+let dom = sitescraper::parse_html(html).unwrap();
 
 let filtered_dom = sitescraper::filter!(dom, "div");
 
@@ -43,8 +43,40 @@ println!("{}", filtered_dom.tag[0].get_text());
 //Output: Hello World!
 ```
 
-**Works also with GetInnerHTML()**
+**Works also with**
+```
+get_inner_html()
+```
 
+### You can also leave arguments out by passing "*" or "":
+
+```
+use sitescraper;
+
+let html = "<html><body><div id="hello">Hello World!</div></body></html>";
+
+let dom = sitescraper::parse_html(html).unwrap();
+
+let filtered_dom = sitescraper::filter!(dom, "*", "id", "hello");
+
+println!("{}", filtered_dom.tag[0].get_text());
+//Output: Hello World!
+```
+
+or
+
+```
+use sitescraper;
+
+let html = "<html><body><div id="hello">Hello World!</div></body></html>";
+
+let dom = sitescraper::parse_html(html).unwrap();
+
+let filtered_dom = sitescraper::filter!(dom, "", "", "hello");
+
+println!("{}", filtered_dom.tag[0].get_text());
+//Output: Hello World!
+```
 
 
 ### Get Website-Content:
@@ -52,9 +84,9 @@ println!("{}", filtered_dom.tag[0].get_text());
 ```
 use sitescraper;
 
-let html = sitescraper::http::get("http://example.com/).unwrap();
+let html = sitescraper::http::get("http://example.com/).await.unwrap();
 
-let dom = sitescraper::parse_html(html);
+let dom = sitescraper::parse_html(html).unwrap();
 
 let filtered_dom = sitescraper::filter!(dom, "div");
 

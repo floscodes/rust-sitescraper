@@ -7,7 +7,7 @@ use reqwest;
 /// ```
 /// use sitescraper;
 ///
-/// let html = sitescraper::http::get("http://example.com/").unwrap();
+/// let html = sitescraper::http::get("http://example.com/").await.unwrap();
 /// ```
 pub async fn get(url: &str) -> Result<String, reqwest::Error> {
     let out = reqwest::get(url).await?;
