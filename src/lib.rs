@@ -1,4 +1,4 @@
-pub mod parse;
+mod parse;
 pub mod http;
 
 use std::io::{Error, ErrorKind};
@@ -36,7 +36,7 @@ pub fn parse_html(html: &str) -> Result<Dom, Error> {
 /// 
 /// let html = "<html><body><div id="hello">Hello World!</div></body></html>";
 /// 
-/// let dom = sitescraper::parse_html(html);
+/// let dom = sitescraper::parse_html(html).unwrap();
 /// 
 /// let filtered_dom = sitescraper::filter!(dom, "div", "id", "hello");
 /// ```
@@ -68,7 +68,7 @@ pub fn parse_html(html: &str) -> Result<Dom, Error> {
 /// ```
 /// let html = "<html><body><div id="hello">Hello World!</div></body></html>";
 /// 
-/// let dom = sitescraper::parse_html(html);
+/// let dom = sitescraper::parse_html(html).unwrap();
 /// 
 /// let filtered_dom = sitescraper::filter!(dom, "body");
 /// 
@@ -88,8 +88,6 @@ macro_rules! filter {
 
 
 /// A [`Dom`] is returned when a html-String ist parsed with [`parse_html`] that can be filtered with [`filter`]
-/// [`filter`]: macro.filter.html#
-/// [`parse_html`]: fn.parse_html.html#
 #[derive(Clone)]
 pub struct Dom {
     pub tag: Vec<Tag>,
@@ -97,7 +95,6 @@ pub struct Dom {
 }
 
 /// Many [`Tag`]s are part of a [`Dom`]
-/// [`Tag`]: struct.Tag.html#
 #[derive(Clone)]
 pub struct Tag {
     tagname: String,
@@ -215,8 +212,14 @@ impl crate::Tag {
             if out.chars().nth(0).unwrap() == '"' {
                 out=out[1..].to_string();
                 out=out[..out.find('"').unwrap()].to_string();
+            } else if out.chars().nth(0).unwrap() == '\''{
+                out=out[1..].to_string();
+                out=out[..out.find('\'').unwrap()].to_string();
             } else {
-                out=out[..out.find(" ").unwrap()].to_string();
+                match out.find(" ") {
+                    Some(v) => out=out[..v].to_string(),
+                    None => out=out[..out.len()-1].to_string()
+                }
             }
         }
 
