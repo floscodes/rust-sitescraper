@@ -6,7 +6,7 @@ mod tagnames;
 
 impl crate::Dom {
     #[allow(dead_code)]
-    pub fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> crate::Dom {
+    pub (in crate) fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> crate::Dom {
 
         #[allow(unused_assignments)]
         let mut new = crate::Dom::new();
