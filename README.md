@@ -1,4 +1,5 @@
-# Scraping Websites in Rust!
+[![forthebadge made-with-rust](http://ForTheBadge.com/images/badges/made-with-rust.svg)](https://www.rust-lang.org/)
+# Scraping Websites!
 
 
 ## Examples:
