@@ -1,4 +1,4 @@
-[![forthebadge made-with-rust](http://ForTheBadge.com/images/badges/made-with-rust.svg)](https://www.rust-lang.org/)
+![forthebadge made-with-rust](http://ForTheBadge.com/images/badges/made-with-rust.svg)](https://www.rust-lang.org/)
 # Scraping Websites! ![crates.io](https://img.shields.io/crates/v/sitescraper.svg)
 
 
