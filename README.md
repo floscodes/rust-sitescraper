@@ -11,7 +11,7 @@ let html = "<html><body><div>Hello World!</div></body></html>";
      
 let dom = sitescraper::parse_html(html).unwrap();
      
-let filtered_dom = sitescraper::filter!(dom, "body");
+let filtered_dom = dom.filter("body");
      
 println!("{}", filtered_dom.get_inner_html());
 //Output: <div>Hello World!</div>
@@ -23,7 +23,7 @@ let html = "<html><body><div>Hello World!</div></body></html>";
 
 let dom = sitescraper::parse_html(html).unwrap();
 
-let filtered_dom = sitescraper::filter!(dom, "body");
+let filtered_dom = dom.filter("body");
 
 println!("{}", filtered_dom.get_text());
 //Output: Hello World!
@@ -38,7 +38,7 @@ let html = "<html><body><div>Hello World!</div></body></html>";
 
 let dom = sitescraper::parse_html(html).unwrap();
 
-let filtered_dom = sitescraper::filter!(dom, "div");
+let filtered_dom = dom.filter("div");
 
 println!("{}", filtered_dom.tag[0].get_text());
 //Output: Hello World!
@@ -47,6 +47,26 @@ println!("{}", filtered_dom.tag[0].get_text());
 **Works also with**
 ```
 get_inner_html()
+```
+
+### Filter by tag-name, attribute-name and attribute-value using a tuple:
+
+```
+use sitescraper;
+ 
+let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
+ 
+let dom = sitescraper::parse_html(html).unwrap();
+ 
+let filtered_dom = dom.filter(("div", "id", "hello"));
+ 
+println!("{}", filtered_dom.tag[0].get_text());
+//Output: Hello World!
+```
+
+**Works also with a tuple consisting of two string literals**
+```
+let filtered_dom = dom.filter(("div", "id"));
 ```
 
 ### You can also leave arguments out by passing "*" or "":
@@ -58,7 +78,7 @@ let html = "<html><body><div id="hello">Hello World!</div></body></html>";
 
 let dom = sitescraper::parse_html(html).unwrap();
 
-let filtered_dom = sitescraper::filter!(dom, "*", "id", "hello");
+let filtered_dom = dom.filter(("*", "id", "hello"));
 
 println!("{}", filtered_dom.tag[0].get_text());
 //Output: Hello World!
@@ -73,7 +93,7 @@ let html = "<html><body><div id="hello">Hello World!</div></body></html>";
 
 let dom = sitescraper::parse_html(html).unwrap();
 
-let filtered_dom = sitescraper::filter!(dom, "", "", "hello");
+let filtered_dom = dom.filter(("", "", "hello"));
 
 println!("{}", filtered_dom.tag[0].get_text());
 //Output: Hello World!

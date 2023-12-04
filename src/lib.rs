@@ -29,7 +29,7 @@
 //! println!("{}", filtered_dom.get_text());
 //! //Output: Hello World!
 //! ```
-//! ** Make sure to enable loop unrolling to avoid possible slow code execution! **
+//! **Make sure to enable loop unrolling to avoid possible slow code execution!**
 //!
 //! ### Get Text from single Tags:
 //!
@@ -64,6 +64,11 @@
 //! 
 //! println!("{}", filtered_dom.tag[0].get_text());
 //! //Output: Hello World!
+//! ```
+//! 
+//! **Works also with a tuple consisting of two string literals**
+//! ```
+//! let filtered_dom = dom.filter(("div", "id"));
 //! ```
 //! 
 //! You can also filter only by attribute value by writing the following:
