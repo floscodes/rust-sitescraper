@@ -3,45 +3,25 @@ pub (in crate) mod text;
 mod innerhtml;
 mod tagnames;
 
-
-impl crate::Dom {
-    #[allow(dead_code)]
-    pub fn f(&self, tag_name: &str, attr_name: &str, attr_value: &str) -> crate::Dom {
-
-        #[allow(unused_assignments)]
-        let mut new = crate::Dom::new();
-
-        if tag_name == "" && attr_name == "" && attr_value == "" {
-             return self.clone();
-        }
+pub trait Args {
+    fn extract(self) -> (&'static str, &'static str, &'static str);
+}
 
 
-        if !self.is_parsed {
-            new=crate::parse_html(&self.to_string()).unwrap();
-        } else {
-            new=self.clone();
-        }
-        
-        if tag_name != "" && tag_name != "*" {
-            new=new.tag(tag_name);
-        }
-
-        if attr_name != "" && attr_name != "*"  {
-            new=new.attr(attr_name);
-        }
-
-        if attr_value != "" && attr_value != "*"  {
-            new=new.attr_value(attr_value);
-        }
-
-        new.is_parsed=false;
-        new
+impl Args for &'static str {
+    fn extract(self) -> (&'static str, &'static str, &'static str) {
+        (self, "", "")
     }
+}
 
-    pub (in crate::parse) fn new() -> crate::Dom {
-        let tag = crate::Tag{tagname: "".to_string(), tagcontent: "".to_string(), innerhtml: "".to_string()};
-        let tags = vec![tag];
-        crate::Dom{tag: tags, is_parsed: false}
+impl Args for (&'static str, &'static str) {
+    fn extract(self) -> (&'static str, &'static str, &'static str) {
+        (self.0, self.1, "")
     }
+}
 
+impl Args for (&'static str, &'static str, &'static str) {
+    fn extract(self) -> (&'static str, &'static str, &'static str) {
+        (self.0, self.1, self.2)
+    }
 }

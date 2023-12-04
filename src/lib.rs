@@ -1,7 +1,9 @@
 //! # Scraping Websites in Rust!
 //!
-//!
-//! ## Examples:
+//! Sitescraper is a libary for the scraping and extraction of website content.
+//! You can easily parse html doms and extract data.
+//! 
+//! See examples below:
 //!
 //! ### Get InnerHTML:
 //!
@@ -10,7 +12,7 @@
 //!    
 //! let dom = sitescraper::parse_html(html).unwrap();
 //!     
-//! let filtered_dom = sitescraper::filter!(dom, "body");
+//! let filtered_dom = dom.filter("body");
 //!      
 //! println!("{}", filtered_dom.get_inner_html());
 //! //Output: <div>Hello World!</div>
@@ -22,11 +24,12 @@
 //!
 //! let dom = sitescraper::parse_html(html).unwrap();
 //! 
-//! let filtered_dom = sitescraper::filter!(dom, "body");
+//! let filtered_dom = dom.filter("body");
 //! 
 //! println!("{}", filtered_dom.get_text());
 //! //Output: Hello World!
 //! ```
+//! ** Make sure to enable loop unrolling to avoid possible slow code execution! **
 //!
 //! ### Get Text from single Tags:
 //!
@@ -37,7 +40,7 @@
 //! 
 //! let dom = sitescraper::parse_html(html).unwrap();
 //! 
-//! let filtered_dom = sitescraper::filter!(dom, "div");
+//! let filtered_dom = dom.filter("div");
 //! 
 //! println!("{}", filtered_dom.tag[0].get_text());
 //! //Output: Hello World!
@@ -48,36 +51,36 @@
 //! get_inner_html()
 //! ```
 //! 
-//! ### You can also leave arguments out by passing "*" or "":
-
+//! ### Filter by tag-name, attribute-name and attribute-value using a tuple:
+//!
 //! ```
 //! use sitescraper;
 //! 
-//! let html = "<html><body><div id="hello">Hello World!</div></body></html>";
+//! let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
 //! 
 //! let dom = sitescraper::parse_html(html).unwrap();
 //! 
-//! let filtered_dom = sitescraper::filter!(dom, "*", "id", "hello");
+//! let filtered_dom = dom.filter(("div", "id", "hello"));
 //! 
 //! println!("{}", filtered_dom.tag[0].get_text());
 //! //Output: Hello World!
 //! ```
 //! 
-//! or
+//! You can also filter only by attribute value by writing the following:
 //! 
 //! ```
 //! use sitescraper;
 //! 
-//! let html = "<html><body><div id="hello">Hello World!</div></body></html>";
+//! let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
 //! 
 //! let dom = sitescraper::parse_html(html).unwrap();
 //! 
-//! let filtered_dom = sitescraper::filter!(dom, "", "", "hello");
+//! let filtered_dom = dom.filter(("", "", "hello"));
 //! 
 //! println!("{}", filtered_dom.tag[0].get_text());
 //! //Output: Hello World!
 //! ```
-//! 
+//! ** Check out more examples how to use the [`filter`] method **
 //! 
 //! ### Get Website-Content:
 //! 
@@ -88,16 +91,19 @@
 //! 
 //! let dom = sitescraper::parse_html(html).unwrap();
 //! 
-//! let filtered_dom = sitescraper::filter!(dom, "div");
+//! let filtered_dom = dom.filter("div");
 //! 
 //! println!("{}", filtered_dom.get_inner_html());
 //! 
 //! ```
+//! 
+//! [`filter`]: struct.Dom.html#method.filter
 
 pub (in crate) mod parse;
 pub mod http;
 
 use std::io::{Error, ErrorKind};
+use parse::Args;
 
 /// This method parses a &[`str`] to a [`Dom`].
 /// It returns a [`Result`] that can be unwrapped to a [`Dom`] if the parsing-process was successful.
@@ -122,72 +128,105 @@ pub fn parse_html(html: &str) -> Result<Dom, Error> {
 }
 
 
-#[allow(unused_macros)]
-/// This macro filters a [`Dom`] by the given tag-name, attribute-name and attribute-value.
-/// 
-/// # Examples
-/// 
-/// ```
-/// use sitescraper;
-/// 
-/// let html = "<html><body><div id="hello">Hello World!</div></body></html>";
-/// 
-/// let dom = sitescraper::parse_html(html).unwrap();
-/// 
-/// let filtered_dom = sitescraper::filter!(dom, "div", "id", "hello");
-/// ```
-/// 
-/// The first argument has to be a [`Dom`], the following arguments follow this order: tag-name (e.g. "div"), attribute-name, e.g. "id", attribute-value (e.g. "hello").
-/// You can also just filter the [`Dom`] by tagname, e.g.
-/// ```
-/// let filtered_dom = sitescraper::filter!(dom, "div");
-/// ```
-/// or just filter it by tag-name and attribute-name, e.g.parse_html
-/// ```
-/// let filtered_dom = sitescraper::filter!(dom, "div", "id");
-/// ```
-/// You can also leave arguments out by typing
-/// ```
-/// let filtered_dom = sitescraper::filter!(dom, "", "id", "hello");
-/// ```
-/// or
-/// ```
-/// let filtered_dom = sitescraper::filter!(dom, "", "", "hello");
-/// ```
-/// 
-/// or
-/// ```
-/// let filtered_dom = sitescraper::filter!(dom, "*", "*", "hello");
-/// ```
-/// 
-/// A filtered [`Dom`] can be filtered again with this macro, e.g.
-/// ```
-/// let html = "<html><body><div id="hello">Hello World!</div></body></html>";
-/// 
-/// let dom = sitescraper::parse_html(html).unwrap();
-/// 
-/// let filtered_dom = sitescraper::filter!(dom, "body");
-/// 
-/// let filtered_dom_2 = sitescraper::filter!(filtered_dom, "div");
-/// ```
-/// [`Dom`]: struct.Dom.html#
-#[macro_export]
-macro_rules! filter {
-        () => {};
-
-        ($dom: expr) => {$dom};
-
-        ($dom: expr, $tag: expr) => {$dom.f($tag, "", "")};
-        ($dom: expr, $tag: expr, $attr_name: expr) => {$dom.f($tag, $attr_name, "")};
-        ($dom: expr, $tag: expr, $attr_name: expr, $attr_value: expr) => {$dom.f($tag, $attr_name, $attr_value)};
-    }
-
-
 /// A [`Dom`] is returned when a html-String ist parsed with [`parse_html`] that can be filtered with [`filter`]
 #[derive(Clone)]
 pub struct Dom {
     pub tag: Vec<Tag>,
     is_parsed: bool,
+}
+
+impl crate::Dom {
+#[allow(dead_code)]
+/// This method can filter a [`Dom`] by the given tag-name, attribute-name and attribute-value.
+/// 
+/// # Examples
+/// 
+/// To filter the dom just by a tag-name, pass the tag-name as an argument.
+/// 
+/// ```
+/// use sitescraper;
+/// 
+/// let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
+/// 
+/// let dom = sitescraper::parse_html(html).unwrap();
+/// 
+/// let filtered_dom = dom.filter("div");
+/// ```
+/// if you want to filter it by tag-name and attribute-name, you can pass a tuple:
+/// ```
+/// let filtered_dom = dom.filter(("div", "id"));
+/// ```
+/// If you want to filter a dom by an attribute-value as well, you can do the following:
+/// 
+/// ```
+/// let filtered_dom = dom.filter(("div, "id, "hello"));
+/// ````
+/// 
+/// If you only want to filter by attribute-name and attribute-value, you can just write:
+/// ```
+/// let filtered_dom = dom.filter(("", "id", "hello"));
+/// ```
+/// or
+/// ```
+/// let filtered_dom = dom.filter(("", "", "hello"));
+/// ```
+/// 
+/// or
+/// ```
+/// let filtered_dom = dom.filter(("*", "*", "hello"));
+/// ```
+/// 
+/// A filtered [`Dom`] can be filtered again with this method, e.g.
+/// ```
+/// let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
+/// 
+/// let dom = sitescraper::parse_html(html).unwrap();
+/// 
+/// let filtered_dom = dom.filter("body");
+/// 
+/// let filtered_dom_2 = dom.filter("div");
+/// ```
+/// [`Dom`]: struct.Dom.html#
+    pub fn filter(&self, args: impl Args) -> crate::Dom {
+
+        let (tag_name, attr_name, attr_value) = args.extract();
+
+        #[allow(unused_assignments)]
+        let mut new = crate::Dom::new();
+
+        if tag_name == "" && attr_name == "" && attr_value == "" {
+             return self.clone();
+        }
+
+
+        if !self.is_parsed {
+            new=crate::parse_html(&self.to_string()).unwrap();
+        } else {
+            new=self.clone();
+        }
+        
+        if tag_name != "" && tag_name != "*" {
+            new=new.tag(tag_name);
+        }
+
+        if attr_name != "" && attr_name != "*"  {
+            new=new.attr(attr_name);
+        }
+
+        if attr_value != "" && attr_value != "*"  {
+            new=new.attr_value(attr_value);
+        }
+
+        new.is_parsed=false;
+        new
+    }
+
+    fn new() -> Dom {
+        let tag = crate::Tag{tagname: "".to_string(), tagcontent: "".to_string(), innerhtml: "".to_string()};
+        let tags = vec![tag];
+        crate::Dom{tag: tags, is_parsed: false}
+    }
+
 }
 
 /// Many [`Tag`]s are part of a [`Dom`]
@@ -211,7 +250,7 @@ impl crate::Tag {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "body");
+    /// let filtered_dom = dom.filter("body");
     /// 
     /// println!("{}", filtered_dom.tag[0].get_inner_html());
     /// //Output: <div>Hello World!</div>
@@ -231,7 +270,7 @@ impl crate::Tag {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "div");
+    /// let filtered_dom = dom.filter("div");
     /// 
     /// println!("{}", filtered_dom.tag[0].get_tagname());
     /// //Output: div
@@ -251,7 +290,7 @@ impl crate::Tag {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "div");
+    /// let filtered_dom = dom.filter("div");
     /// 
     /// println!("{}", filtered_dom.tag[0].get_text());
     /// //Output: Hello World!
@@ -272,7 +311,7 @@ impl crate::Tag {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "div");
+    /// let filtered_dom = dom.filter("div");
     /// 
     /// println!("{}", filtered_dom.tag[0].to_string());
     /// //Output: <div>Hello World!</div>
@@ -289,11 +328,11 @@ impl crate::Tag {
     /// ```
     /// use sitescraper;
     /// 
-    /// let html = "<html><body><div id="hello">Hello World!</div></body></html>";
+    /// let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "div");
+    /// let filtered_dom = dom.filter("div");
     /// 
     /// println!("{}", filtered_dom.tag[0].get_attr_value("id"));
     /// //Output: hello
@@ -390,7 +429,7 @@ impl crate::Dom {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "div");
+    /// let filtered_dom = dom.filter("div");
     /// 
     /// println!("{}", filtered_dom.to_string());
     /// //Output: <div>Hello World!</div>
@@ -449,7 +488,7 @@ impl crate::Dom {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "body");
+    /// let filtered_dom = dom.filter("body");
     /// 
     /// println!("{}", filtered_dom.get_inner_html());
     /// //Output: <div>Hello World!</div>
@@ -508,7 +547,7 @@ impl crate::Dom {
     /// 
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "body");
+    /// let filtered_dom = dom.filter("body");
     /// 
     /// println!("{}", filtered_dom.get_text());
     /// //Output: Hello World!
@@ -563,11 +602,11 @@ impl crate::Dom {
     /// ```
     /// use sitescraper;
     /// 
-    /// let html = "<html><body><div id="hello">Hello World!</div></body></html>";
-    /// 
+    /// let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
+    ///
     /// let dom = sitescraper::parse_html(html).unwrap();
     /// 
-    /// let filtered_dom = sitescraper::filter!(dom, "div");
+    /// let filtered_dom = dom.filter("div");
     /// 
     /// println!("{}", filtered_dom.get_attr_value("id"));
     /// //Output: hello
@@ -598,5 +637,78 @@ impl crate::Dom {
 
         cleared.concat()
     }
+
+}
+
+// Test filter method
+#[test]
+fn test_filter_method() {
+    let html = "<html><body><div id='hello'>Hello World!</div></body></html>";
+    
+    let dom = parse_html(html).unwrap();
+    
+    let filtered_dom = dom.filter("div");
+    let filtered_dom2 = dom.filter("body");
+    let filtered_dom3 = dom.filter(("div", "id"));
+    let filtered_dom4 = dom.filter(("div", "id"));
+
+    assert_eq!(filtered_dom.tag[0].get_attr_value("id"), "hello");
+    assert_eq!(filtered_dom.tag[0].get_inner_html(), "Hello World!");
+    assert_eq!(filtered_dom2.tag[0].get_text(), "Hello World!");
+    assert_eq!(filtered_dom3.tag[0].get_text(), "Hello World!");
+    assert_eq!(filtered_dom4.get_inner_html(), "Hello World!");
+
+    let html = r#"
+    <!doctype html>
+    <html>
+    <head>
+        <title>Example Domain</title>
+    
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style type="text/css">
+        body {
+            background-color: #f0f0f2;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            
+        }
+        div {
+            width: 600px;
+            margin: 5em auto;
+            padding: 2em;
+            background-color: #fdfdff;
+            border-radius: 0.5em;
+            box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+        }
+        a:link, a:visited {
+            color: #38488f;
+            text-decoration: none;
+        }
+        @media (max-width: 700px) {
+            div {
+                margin: 0 auto;
+                width: auto;
+            }
+        }
+        </style>    
+    </head>
+    
+    <body>
+    <div>
+        <h1>Example Domain</h1>
+        <p>This domain is for use in illustrative examples in documents. You may use this
+        domain in literature without prior coordination or asking for permission.</p>
+        <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+    </div>
+    </body>
+    </html>
+    "#;
+
+    let dom = parse_html(html).unwrap();
+    let filtered_dom = dom.filter("h1");
+        assert_eq!(filtered_dom.tag[0].get_text(), "Example Domain");
 
 }
